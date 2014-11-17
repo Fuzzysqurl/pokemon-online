@@ -176,7 +176,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
                 lead = j == 0;
             } else if (b.mode() == ChallengeInfo::Doubles) {
                 lead = j <= 1;
-            } else if (b.mode() == ChallengeInfo::Triples) {
+            } else if (b.mode() == ChallengeInfo::Triples || b.mode() == ChallengeInfo::Rotation) {
                 lead = j <= 2;
             }
 

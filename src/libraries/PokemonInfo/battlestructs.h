@@ -631,7 +631,7 @@ public:
     int numberOfSlots() const {
         if (mode == ChallengeInfo::Doubles) {
             return 4;
-        } else if (mode == ChallengeInfo::Triples) {
+        } else if (mode == ChallengeInfo::Triples || mode == ChallengeInfo::Rotation) {
             return 6;
         } else {
             return 2;

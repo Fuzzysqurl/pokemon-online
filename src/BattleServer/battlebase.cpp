@@ -62,7 +62,7 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
 
     if (mode() == ChallengeInfo::Doubles) {
         numberOfSlots() = 4;
-    } else if (mode() == ChallengeInfo::Triples) {
+    } else if (mode() == ChallengeInfo::Triples || mode() == ChallengeInfo::Rotation) {
         numberOfSlots() = 6;
     } else {
         numberOfSlots() = 2;

@@ -111,6 +111,9 @@ public:
     bool multiples() const {
         return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
     }
+    bool rotationBattle() const {
+        return mode() == ChallengeInfo::Rotation;
+    }
     bool arePartners(int p1, int p2) const {
         return player(p1) == player(p2);
     }

@@ -26,7 +26,7 @@ BaseBattleInfo::BaseBattleInfo(const PlayerInfo &me, const PlayerInfo &opp, int 
     this->mode =  mode;
     if (mode == ChallengeInfo::Doubles) {
         numberOfSlots = 4;
-    } else if (mode == ChallengeInfo::Triples) {
+    } else if (mode == ChallengeInfo::Triples || mode == ChallengeInfo::Rotation) {
         numberOfSlots = 6;
     } else {
         numberOfSlots = 2;
