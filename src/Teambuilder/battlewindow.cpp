@@ -968,6 +968,21 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     l->addWidget(megaevo, 2, 0, 1, 2);
     megaevo->setVisible(false);
 
+    rotateleft = new QPushButton(this);
+    rotateleft->setText(tr("Rotate &Left"));
+    rotateleft->setCheckable(true);
+    rotateleft->setObjectName("RotateLeft");
+
+    rotateright = new QPushButton(this);
+    rotateright->setText(tr("Rotate &Right"));
+    rotateright->setCheckable(true);
+    rotateright->setObjectName("RotateRight");
+
+    l->addWidget(rotateleft, 3, 0, 1, 1);
+    l->addWidget(rotateright, 3, 1, 1, 1);
+    rotateleft->setVisible(true);
+    rotateright->setVisible(true);
+
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 
