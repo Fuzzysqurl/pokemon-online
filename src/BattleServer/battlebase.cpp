@@ -1482,7 +1482,11 @@ void BattleBase::requestChoices()
     int count = 0;
 
     for (int i = 0; i < numberOfSlots(); i++) {
-        count += requestChoice(i, false);
+        if (mode() == ChallengeInfo::Rotation && (i < 2 || i > 3)) {
+            continue;
+        } else {
+            count += requestChoice(i, false);
+        }
     }
 
     if (!allChoicesOkForPlayer(Player1)) {
