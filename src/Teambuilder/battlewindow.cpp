@@ -381,7 +381,23 @@ void BattleWindow::attackClicked(int zone)
             b = BattleChoice(slot, AttackChoice());
             b.setAttackSlot(zone);
             b.setTarget(data().spot(info().opponent));
-            if (myazones[n]->megaevo->isChecked()) {
+            if (myazones[n]->rotateleft->isChecked()){
+                //Helps prevent clicking both
+                myazones[n]->rotateright->setChecked(false);
+
+                //rotate left
+
+                //Uncheck to prevent endless spinning
+                myazones[n]->rotateleft->setChecked(false);
+            } else if (myazones[n]->rotateright->isChecked()){
+                //Helps prevent clicking both
+                myazones[n]->rotateleft->setChecked(false);
+
+                //rotate right
+
+                //Uncheck to prevent endless spinning
+                myazones[n]->rotateright->setChecked(false);
+            } else if (myazones[n]->megaevo->isChecked()) {
                 b.setMegaEvo(true);
             }
 
