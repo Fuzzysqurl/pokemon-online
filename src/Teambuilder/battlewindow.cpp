@@ -109,9 +109,14 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
 
     myclose->setText(tr("&Forfeit"));
     mylayout->addWidget(mytab = new QTabWidget(), 2, 0, 1, 3);
-    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 3,0);
-    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 3, 1);
-    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokemon")), 3, 2);
+    if (data().rotationBattle()) {
+        mylayout->addWidget(turnleft = new QPushButton(tr("Rotate &Left")), 3, 0);
+        mylayout->addWidget(turnright = new QPushButton(tr("Rotate &Right")), 3, 2);
+    }
+    mylayout->addWidget(mycancel = new QPushButton(tr("&Cancel")), 4, 0);
+    mylayout->addWidget(myattack = new QPushButton(tr("&Attack")), 4, 1);
+    mylayout->addWidget(myswitch = new QPushButton(tr("&Switch Pokemon")), 4, 2);
+
     mytab->setObjectName("Modified");
 
     mytab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -381,10 +386,7 @@ void BattleWindow::attackClicked(int zone)
             b = BattleChoice(slot, AttackChoice());
             b.setAttackSlot(zone);
             b.setTarget(data().spot(info().opponent));
-            if (myazones[n]->rotateleft->isChecked() || myazones[n]->rotateright->isChecked()){
-                myazones[n]->rotateleft->setChecked(false);
-                myazones[n]->rotateright->setChecked(false);
-            } else if (myazones[n]->megaevo->isChecked()) {
+            if (myazones[n]->megaevo->isChecked()) {
                 b.setMegaEvo(true);
             }
 
@@ -477,12 +479,6 @@ void BattleWindow::goToNextChoice()
                 int snum = data().slotNum(slot);
                 myazones[snum]->megaevo->setVisible(info().choices[n].mega);
                 myazones[snum]->megaevo->setChecked(false);
-
-                myazones[snum]->rotateleft->setVisible(data().rotationBattle());
-                myazones[snum]->rotateleft->setChecked(false);
-
-                myazones[snum]->rotateright->setVisible(data().rotationBattle());
-                myazones[snum]->rotateright->setChecked(false);
 
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
@@ -977,21 +973,6 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     megaevo->setObjectName("MegaEvo");
     l->addWidget(megaevo, 2, 0, 1, 2);
     megaevo->setVisible(false);
-
-    rotateleft = new QPushButton(this);
-    rotateleft->setText(tr("Rotate &Left"));
-    rotateleft->setCheckable(true);
-    rotateleft->setObjectName("RotateLeft");
-
-    rotateright = new QPushButton(this);
-    rotateright->setText(tr("Rotate &Right"));
-    rotateright->setCheckable(true);
-    rotateright->setObjectName("RotateRight");
-
-    l->addWidget(rotateleft, 3, 0, 1, 1);
-    l->addWidget(rotateright, 3, 1, 1, 1);
-    rotateleft->setVisible(false);
-    rotateright->setVisible(false);
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }

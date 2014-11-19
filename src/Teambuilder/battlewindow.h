@@ -176,7 +176,7 @@ protected:
     TargetSelection *tarZone;
     QList<QButtonGroup*> mybgroups;
     PokeZone *mypzone;
-    QPushButton *myswitch, *myattack, *mycancel;
+    QPushButton *myswitch, *myattack, *mycancel, *turnleft, *turnright;
     QMessageBox *question;
 
     bool canLeaveBattle;
@@ -193,7 +193,7 @@ public:
 
     AbstractAttackButton *tattacks[4];
     QAbstractButton *attacks[4];
-    QPushButton *megaevo, *rotateleft, *rotateright;
+    QPushButton *megaevo;
 signals:
     void clicked(int attack);
 
