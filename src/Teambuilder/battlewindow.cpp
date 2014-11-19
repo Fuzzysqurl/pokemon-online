@@ -370,10 +370,10 @@ void BattleWindow::switchToPokeZone()
 void BattleWindow::rotatePokesLeft()
 {
     int n = data().slotNum(info().currentSlot);
-    if (sender() == turnleft && info().mode == ChallengeInfo::Rotation && n == 1) {
+    if (sender() == turnleft && info().mode == ChallengeInfo::Rotation) {
         BattleChoice &b = info().choice[n];
         b = BattleChoice(info().currentSlot, RotateLeftChoice());
-        info().done[n] = false;
+        info().done[n] = true;
         goToNextChoice();
 
         return;
@@ -383,14 +383,13 @@ void BattleWindow::rotatePokesLeft()
 void BattleWindow::rotatePokesRight()
 {
     int n = data().slotNum(info().currentSlot);
-    if (sender() == turnright && info().mode == ChallengeInfo::Rotation && n == 1) {
+    if (sender() == turnright && info().mode == ChallengeInfo::Rotation) {
         BattleChoice &b = info().choice[n];
         b = BattleChoice(info().currentSlot, RotateRightChoice());
-        info().done[n] = false;
+        info().done[n] = true;
         goToNextChoice();
 
         return;
-
     }
 }
 

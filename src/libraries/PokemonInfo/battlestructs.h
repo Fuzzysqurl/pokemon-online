@@ -385,11 +385,11 @@ struct BattleChoice {
         return type == CenterMoveType;
     }
 
-    bool toTheLeft() const {
+    bool leftChoice() const {
         return type == TurnLeftType;
     }
 
-    bool toTheRight() const {
+    bool rightChoice() const {
         return type == TurnRightType;
     }
 

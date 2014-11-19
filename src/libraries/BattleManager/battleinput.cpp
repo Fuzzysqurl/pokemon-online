@@ -545,6 +545,10 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             output<BattleEnum::ChooseRearrangeTeam>(choice.slot(), &c);
         } else if (choice.moveToCenterChoice()) {
             output<BattleEnum::ChooseShiftToCenter>(choice.slot());
+        } else if (choice.leftChoice()) {
+            output<BattleEnum::RotateLeft>(choice.slot());
+        } else if (choice.rightChoice()) {
+            output<BattleEnum::RotateRight>(choice.slot());
         }
         break;
     }
