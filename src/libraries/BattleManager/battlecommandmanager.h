@@ -87,6 +87,8 @@ public:
         void onDrawRequest(int player);
         void onUseItem(int player, int item);
         void onItemChangeCount(int player, int item, int count);
+        void onRotateLeft(int player, int slot1, int slot2, int slot3, bool silent);
+        void onRotateRight(int player, int slot1, int slot2, int slot3, bool silent);
 
         See BattleCommandInvoker for more details!
     */

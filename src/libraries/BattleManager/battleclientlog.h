@@ -64,6 +64,8 @@ public:
 //    void onClockStart(int player, int time);
 //    void onClockStop(int player, int time);
     void onShiftSpots(int player, int spot1, int spot2, bool silent);
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool silent);
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool silent);
     void onBattleEnd(int res, int winner);
     void onVariation(int player, int bonus, int malus);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);

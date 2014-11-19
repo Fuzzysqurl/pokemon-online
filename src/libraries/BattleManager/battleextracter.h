@@ -157,6 +157,8 @@ protected:
     start(ChooseDraw, int player) end(player)
     start(UseItem, int player; int item) end(player, item)
     start(ItemCountChange, int player; int item; int count) end(player, item, count)
+    start(RotateLeft, int player; int slot1; int slot2; int slot3; bool silent) end (player, slot1, slot2, slot3, silent)
+    start(RotateRight, int player; int slot1; int slot2; int slot3; bool silent) end (player, slot1, slot2, slot3, silent)
 
 #undef start
 #undef end
@@ -277,6 +279,8 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChooseDraw);
     addCallback(UseItem);
     addCallback(ItemCountChange);
+    addCallback(RotateLeft);
+    addCallback(RotateRight);
 
 #undef addCallback
 }

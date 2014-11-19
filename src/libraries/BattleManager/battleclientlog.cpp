@@ -547,6 +547,19 @@ void BattleClientLog::onShiftSpots(int player, int spot1, int spot2, bool silent
     }
 }
 
+//In regards to rotation, going left means the right pokemon is used. Going right means the left pokemon is used.
+void BattleClientLog::onRotateLeft(int player, int spot1, int spot2, int spot3, bool silent)
+{
+    int spot = data()->spotFromId(player);
+    printLine("RotateLeft", tr("%1's team rotated to the left! %2 is now active.").arg(data()->name(spot), nick(data()->spot(player, spot3))), silent);
+}
+
+void BattleCLientLog::onRotateRight(int player, int spot1, int spot2, int spot3, bool silent)
+{
+    int spot = data()->spotFromId(player);
+    printLine("RotateRight", tr("%1's team rotated to the right! %2 is now active.").arg(data()->name(spot), nick(data()->spot(player, spot1))), silent);
+}
+
 void BattleClientLog::onVariation(int, int bonus, int malus)
 {
     printHtml("Variation", tr("%1+%2, %3").arg(toBoldColor(tr("Variation: "), Qt::blue)).arg(bonus).arg(malus));

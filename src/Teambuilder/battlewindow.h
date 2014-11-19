@@ -101,6 +101,8 @@ public:
     void onHpChange(int spot, int newHp);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onShiftSpots(int player, int spot1, int spot2, bool silent);
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool silent);
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool silent);
     void onBattleEnd(int res, int winner);
     void onPPChange(int spot, int move, int PP);
     void onTempPPChange(int spot, int move, int PP);

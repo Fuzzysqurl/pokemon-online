@@ -175,6 +175,12 @@ public:
     void onShiftSpots(int player, int spot1, int spot2, bool silent) {
         makeEvent("onShiftSpots", player, spot1, spot2, silent);
     }
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool silent) {
+        makeEvent("onRotateLeft", player, spot1, spot2, spot3, silent);
+    }
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool silent) {
+        makeEvent("onRotateRight", player, spot1, spot2, spot3, silent);
+    }
     void onBattleEnd(int res, int winner) {
         makeEvent("onBattleEnd", res, winner);
     }

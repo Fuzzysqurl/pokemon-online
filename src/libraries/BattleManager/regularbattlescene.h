@@ -117,6 +117,8 @@ public:
     void onDefiniteFormeChange(int player, int poke, int){if (poke < data()->numberOfSlots()/2) gui.zone->updatePoke(data()->spot(player, poke));}
     void onCosmeticFormeChange(int spot, int) {gui.zone->updatePoke(spot);}
     void onShiftSpots(int player, int spot1, int spot2, bool);
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool);
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool);
     void onSendBack(int spot, bool) {gui.zone->updatePoke(spot);}
     void onSubstituteStatus(int spot, bool) {gui.zone->updatePoke(spot);}
 

@@ -103,6 +103,22 @@ public:
         team(player).switchPokemons(spot1, spot2);
     }
 
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool)
+    {
+        d()->field()->shiftSpots(spot(player, spot3), spot(player, spot2));
+        team(player).switchPokemons(spot3, spot2);
+        d()->field()->shiftSpots(spot(player, spot2), spot(player, spot1));
+        team(player).switchPokemons(spot2, spot1);
+    }
+
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool)
+    {
+        d()->field()->shiftSpots(spot(player, spot1), spot(player, spot2));
+        team(player).switchPokemons(spot1, spot2);
+        d()->field()->shiftSpots(spot(player, spot3), spot(player, spot2));
+        team(player).switchPokemons(spot3, spot2);
+    }
+
     void onItemChangeCount(int player, int item, int count)
     {
         if (count <= 0) {

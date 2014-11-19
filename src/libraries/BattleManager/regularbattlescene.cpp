@@ -339,6 +339,24 @@ void RegularBattleScene::onShiftSpots(int player, int spot1, int spot2, bool)
     QTimer::singleShot(500, this, SLOT(unpause()));
 }
 
+void RegularBattleScene::onRotateLeft(int player, int spot1, int spot2, int spot3, bool)
+{
+    gui.zone->updatePoke(data()->spot(player, spot1));
+    gui.zone->updatePoke(data()->spot(player, spot2));
+    gui.zone->updatePoke(data()->spot(player, spot3));
+    pause();
+    QTimer::singleShot(500, this, SLOT(unpause()));
+}
+
+void RegularBattleScene::onRotateRight(int player, int spot1, int spot2, int spot3, bool)
+{
+    gui.zone->updatePoke(data()->spot(player, spot1));
+    gui.zone->updatePoke(data()->spot(player, spot2));
+    gui.zone->updatePoke(data()->spot(player, spot3));
+    pause();
+    QTimer::singleShot(500, this, SLOT(unpause()));
+}
+
 QString RegularBattleScene::nick(int spot) const
 {
     if (mLogNames) {

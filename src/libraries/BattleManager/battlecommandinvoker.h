@@ -140,6 +140,8 @@ protected:
     start(ChooseDraw, onDrawRequest, int player) end(onDrawRequest, player)
     start(UseItem, onUseItem, int player, int item) end(onUseItem, player, item)
     start(ItemCountChange, onItemChangeCount, int player, int item, int count) end (onItemChangeCount, player, item, count)
+    start(RotateLeft, onRotateLeft, int player, int spot1, int spot2, int spot3, bool silent) end(onRotateLeft, player, spot1, spot2, spot3, silent)
+    start(RotateRight, onRotateRight, int player, int spot1, int spot2, int spot3, bool silent) end(onRotateRight, player, spot1, spot2, spot3, silent)
 
 #undef start
 #undef end
@@ -221,6 +223,8 @@ protected:
     void onDrawRequest(int player);
     void onUseItem(int player, int item);
     void onItemChangeCount(int player, int item, int count);
+    void onRotateLeft(int player, int spot1, int spot2, int spot3, bool silent);
+    void onRotateRight(int player, int spot1, int spot2, int spot3, bool silent);
 */
 
 #endif // BATTLECOMMANDINVOKER_H

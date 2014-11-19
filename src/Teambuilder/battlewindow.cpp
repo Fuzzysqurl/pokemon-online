@@ -841,6 +841,24 @@ void BattleWindow::onShiftSpots(int player, int s1, int s2, bool)
     }
 }
 
+void BattleWindow::onRotateLeft(int player, int s1, int s2, int s3, bool)
+{
+    if (player == info().myself) {
+        mypzone->pokes[s1]->changePokemon(poke(s1));
+        mypzone->pokes[s2]->changePokemon(poke(s2));
+        mypzone->pokes[s3]->changePokemon(poke(s3));
+    }
+}
+
+void BattleWindow::onRotateRight(int player, int s1, int s2, int s3, bool)
+{
+    if (player == info().myself) {
+        mypzone->pokes[s1]->changePokemon(poke(s1));
+        mypzone->pokes[s2]->changePokemon(poke(s2));
+        mypzone->pokes[s3]->changePokemon(poke(s3));
+    }
+}
+
 void BattleWindow::onItemChangeCount(int, int, int)
 {
     listItems();
