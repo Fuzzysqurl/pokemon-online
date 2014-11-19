@@ -160,6 +160,8 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
     connect(myswitch, SIGNAL(clicked()), SLOT(switchToPokeZone()));
     connect(mycancel, SIGNAL(clicked()), SLOT(emitCancel()));
     connect(mytab, SIGNAL(currentChanged(int)), SLOT(changeAttackText(int)));
+    connect(turnleft, SIGNAL(clicked()), SLOT(rotatePokesLeft()));
+    connect(turnright, SIGNAL(clicked()), SLOT(rotatePokesRight()));
 
     mysend->disconnect(this);
     mysend->setText(tr("Suggest draw"));
@@ -297,6 +299,16 @@ void BattleWindow::targetChosen(int i)
     goToNextChoice();
 }
 
+void BattleWindow::rotatePokesLeft()
+{
+
+}
+
+void BattleWindow::rotatePokesRight()
+{
+
+}
+
 void BattleWindow::clickClose()
 {
     if (battleEnded || canLeaveBattle) {
@@ -391,6 +403,10 @@ void BattleWindow::attackClicked(int zone)
             }
 
             if (!data().multiples()) {
+                info().done[n] = true;
+                goToNextChoice();
+            } else if (data().rotationBattle()) {
+                //Might need something here
                 info().done[n] = true;
                 goToNextChoice();
             } else {
