@@ -929,6 +929,8 @@ DataStream & operator >> (DataStream &in, BattleChoice &po)
     case CancelType:
     case DrawType:
     case CenterMoveType:
+    case TurnLeftType:
+    case TurnRightType:
         break;
     case SwitchType:
         in >> po.choice.switching.pokeSlot;
@@ -957,6 +959,8 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
     case CancelType:
     case CenterMoveType:
     case DrawType:
+    case TurnLeftType:
+    case TurnRightType:
         break;
     case SwitchType:
         out << po.choice.switching.pokeSlot;

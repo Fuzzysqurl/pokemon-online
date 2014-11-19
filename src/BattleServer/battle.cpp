@@ -528,7 +528,7 @@ void BattleSituation::requestEndOfTurnSwitchIns()
         }
     } else if (mode() == ChallengeInfo::Rotation) {
         //Rotate the pokemon to make sure one is always in the center
-        //Rotation method: To the Left
+        //Rotation method: To the Right
     }
 
     speedsVector = sortedBySpeed();

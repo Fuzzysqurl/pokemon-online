@@ -263,7 +263,9 @@ enum ChoiceType {
     RearrangeType,
     CenterMoveType,
     DrawType,
-    ItemType
+    ItemType,
+    TurnLeftType,
+    TurnRightType
 };
 
 struct ItemChoice {
@@ -298,6 +300,14 @@ struct DrawChoice {
 
 };
 
+struct RotateLeftChoice {
+
+};
+
+struct RotateRightChoice {
+
+};
+
 union ChoiceUnion
 {
     CancelChoice cancel;
@@ -307,6 +317,8 @@ union ChoiceUnion
     MoveToCenterChoice move;
     DrawChoice draw;
     ItemChoice item;
+    RotateLeftChoice left;
+    RotateRightChoice right;
 };
 
 struct BattleChoice {
@@ -350,6 +362,16 @@ struct BattleChoice {
         type = ItemType;
         playerSlot = slot;
     }
+    BattleChoice(int slot, const RotateLeftChoice &c) {
+        choice.left = c;
+        type = TurnLeftType;
+        playerSlot = slot;
+    }
+    BattleChoice(int slot, const RotateRightChoice &c) {
+        choice.right = c;
+        type = TurnRightType;
+        playerSlot = slot;
+    }
 
     bool attackingChoice() const {
         return type == AttackType;
@@ -361,6 +383,14 @@ struct BattleChoice {
 
     bool moveToCenterChoice() const {
         return type == CenterMoveType;
+    }
+
+    bool toTheLeft() const {
+        return type == TurnLeftType;
+    }
+
+    bool toTheRight() const {
+        return type == TurnRightType;
     }
 
     bool cancelled() const {

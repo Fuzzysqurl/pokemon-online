@@ -299,16 +299,6 @@ void BattleWindow::targetChosen(int i)
     goToNextChoice();
 }
 
-void BattleWindow::rotatePokesLeft()
-{
-
-}
-
-void BattleWindow::rotatePokesRight()
-{
-
-}
-
 void BattleWindow::clickClose()
 {
     if (battleEnded || canLeaveBattle) {
@@ -376,6 +366,34 @@ void BattleWindow::switchToPokeZone()
         }
     }
 }
+
+void BattleWindow::rotatePokesLeft()
+{
+    int n = data().slotNum(info().currentSlot);
+    if (sender() == turnleft && info().mode == ChallengeInfo::Rotation && n == 1) {
+        BattleChoice &b = info().choice[n];
+        b = BattleChoice(info().currentSlot, RotateLeftChoice());
+        info().done[n] = false;
+        goToNextChoice();
+
+        return;
+    }
+}
+
+void BattleWindow::rotatePokesRight()
+{
+    int n = data().slotNum(info().currentSlot);
+    if (sender() == turnright && info().mode == ChallengeInfo::Rotation && n == 1) {
+        BattleChoice &b = info().choice[n];
+        b = BattleChoice(info().currentSlot, RotateRightChoice());
+        info().done[n] = false;
+        goToNextChoice();
+
+        return;
+
+    }
+}
+
 
 int BattleWindow::ownSlot() const {
     return conf().slot(conf().spot(idme()));
