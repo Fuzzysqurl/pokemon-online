@@ -31,6 +31,8 @@ QVariantMap toJson(const BattleChoices &choices)
     ret.insert("slot", choices.numSlot);
     ret.insert("switch", choices.switchAllowed);
     ret.insert("attack", choices.attacksAllowed);
+    ret.insert("left", choices.leftRotateAllowed);
+    ret.insert("right", choices.rightRotateAllowed);
     ret.insert("mega", choices.mega);
 
     QVariantList list;

@@ -542,6 +542,18 @@ void BattleWindow::goToNextChoice()
                 }
             }
 
+            /*Finally rotation*/
+            if (info().choices[n].leftRotateAllowed == false) {
+                turnleft->setEnabled(false);
+            } else {
+                turnleft->setEnabled(true);
+            }
+            if (info().choices[n].rightRotateAllowed == false) {
+                turnright->setEnabled(false);
+            } else {
+                turnright->setEnabled(true);
+            }
+
             return;
         }
     }
@@ -549,6 +561,8 @@ void BattleWindow::goToNextChoice()
     myattack->setEnabled(false);
     myswitch->setEnabled(false);
     mysend->setEnabled(false);
+    turnleft->setEnabled(false);
+    turnright->setEnabled(false);
 
     disableAll();
 
@@ -566,6 +580,8 @@ void BattleWindow::disable()
     myattack->setEnabled(false);
     myswitch->setEnabled(false);
     mycancel->setEnabled(false);
+    turnleft->setEnabled(false);
+    turnright->setEnabled(false);
     disableAll();
     disconnect(myclose);
     connect(myclose, SIGNAL(clicked()), this, SLOT(deleteLater()));
@@ -881,10 +897,20 @@ void BattleWindow::updateChoices()
             mypzone->pokes[i]->setEnabled(poke(i).num() != 0 && poke(i).life() > 0);
         }
     }
-    
+
+    /*Finally rotation*/
+    if (info().choices[0].leftRotateAllowed == false) {
+        turnleft->setEnabled(false);
+    }
+    if (info().choices[0].rightRotateAllowed == false) {
+        turnright->setEnabled(false);
+    }
+
     if (!info().possible) {
         myattack->setEnabled(false);
         myswitch->setEnabled(false);
+        turnleft->setEnabled(false);
+        turnright->setEnabled(false);
     }
 }
 

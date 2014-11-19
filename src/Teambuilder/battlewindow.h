@@ -137,6 +137,8 @@ public slots:
     void emitCancel();
     void switchToPokeZone();
     void sendRearrangedTeam();
+    void rotatePokesLeft();
+    void rotatePokesRight();
 signals:
     void forfeit(int battleid);
     void offerTie(int battleid);

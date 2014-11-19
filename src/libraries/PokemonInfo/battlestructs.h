@@ -238,10 +238,13 @@ struct BattleChoices
     void disableSwitch();
     void disableAttack(int attack);
     void disableAttacks();
+    void disableRotate();
 
     bool switchAllowed;
     bool attacksAllowed;
     bool attackAllowed[4];
+    bool leftRotateAllowed;
+    bool rightRotateAllowed;
     quint8 numSlot;
     bool mega;
 

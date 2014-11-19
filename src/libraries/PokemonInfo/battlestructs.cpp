@@ -824,7 +824,15 @@ BattleChoices::BattleChoices()
     mega = false;
     switchAllowed = true;
     attacksAllowed = true;
+    leftRotateAllowed = true;
+    rightRotateAllowed = true;
     std::fill(attackAllowed, attackAllowed+4, true);
+}
+
+void BattleChoices::disableRotate()
+{
+    leftRotateAllowed = false;
+    rightRotateAllowed = false;
 }
 
 void BattleChoices::disableSwitch()
@@ -847,6 +855,7 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 {
     BattleChoices ret;
     ret.disableAttacks();
+    ret.disableRotate();
     ret.numSlot = slot;
 
     return ret;
@@ -854,13 +863,13 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 
 DataStream & operator >> (DataStream &in, BattleChoices &po)
 {
-    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega;
+    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega >> po.leftRotateAllowed >> po.rightRotateAllowed;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const BattleChoices &po)
 {
-    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega;
+    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega << po.leftRotateAllowed << po.rightRotateAllowed;
     return out;
 }
 
