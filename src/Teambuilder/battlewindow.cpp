@@ -381,21 +381,8 @@ void BattleWindow::attackClicked(int zone)
             b = BattleChoice(slot, AttackChoice());
             b.setAttackSlot(zone);
             b.setTarget(data().spot(info().opponent));
-            if (myazones[n]->rotateleft->isChecked()){
-                //Helps prevent clicking both
-                myazones[n]->rotateright->setChecked(false);
-
-                //rotate left
-
-                //Uncheck to prevent endless spinning
+            if (myazones[n]->rotateleft->isChecked() || myazones[n]->rotateright->isChecked()){
                 myazones[n]->rotateleft->setChecked(false);
-            } else if (myazones[n]->rotateright->isChecked()){
-                //Helps prevent clicking both
-                myazones[n]->rotateleft->setChecked(false);
-
-                //rotate right
-
-                //Uncheck to prevent endless spinning
                 myazones[n]->rotateright->setChecked(false);
             } else if (myazones[n]->megaevo->isChecked()) {
                 b.setMegaEvo(true);
@@ -490,6 +477,13 @@ void BattleWindow::goToNextChoice()
                 int snum = data().slotNum(slot);
                 myazones[snum]->megaevo->setVisible(info().choices[n].mega);
                 myazones[snum]->megaevo->setChecked(false);
+
+                myazones[snum]->rotateleft->setVisible(data().rotationBattle());
+                myazones[snum]->rotateleft->setChecked(false);
+
+                myazones[snum]->rotateright->setVisible(data().rotationBattle());
+                myazones[snum]->rotateright->setChecked(false);
+
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
@@ -996,8 +990,8 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
 
     l->addWidget(rotateleft, 3, 0, 1, 1);
     l->addWidget(rotateright, 3, 1, 1, 1);
-    rotateleft->setVisible(true);
-    rotateright->setVisible(true);
+    rotateleft->setVisible(false);
+    rotateright->setVisible(false);
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
