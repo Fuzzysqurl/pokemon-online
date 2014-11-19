@@ -554,7 +554,7 @@ void BattleClientLog::onRotateLeft(int player, int spot1, int spot2, int spot3, 
     printLine("RotateLeft", tr("%1's team rotated to the left! %2 is now active.").arg(data()->name(spot), nick(data()->spot(player, spot3))), silent);
 }
 
-void BattleCLientLog::onRotateRight(int player, int spot1, int spot2, int spot3, bool silent)
+void BattleClientLog::onRotateRight(int player, int spot1, int spot2, int spot3, bool silent)
 {
     int spot = data()->spotFromId(player);
     printLine("RotateRight", tr("%1's team rotated to the right! %2 is now active.").arg(data()->name(spot), nick(data()->spot(player, spot1))), silent);
