@@ -1621,8 +1621,17 @@ struct AMImposter : public AM
 
         b.changeSprite(s, num);
 
+        //Gen 2 Max PP = Original Move's max PP
+        //Gen 3+4 Max PP = Original Move's max PP with PP Ups
+        //Gen 5+6 Max PP = 5
         for (int i = 0; i < 4; i++) {
-            b.changeTempMove(s,i,b.move(t,i));
+            int maxpp = MoveInfo::PP(b.move(t,i), b.gen());
+            if (b.gen().num == 3 || b.gen().num == 4) {
+                maxpp = maxpp*8/5;
+            } else if (b.gen() >= 5) {
+                maxpp = 5;
+            }
+            b.changeTempMove(s,i,b.move(t,i), 5, maxpp);
         }
 
         for (int i = 1; i < 6; i++)

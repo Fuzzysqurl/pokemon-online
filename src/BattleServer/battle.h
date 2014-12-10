@@ -96,6 +96,7 @@ public:
     void loseAbility(int player);
     /* Removes PP.. */
     void changePP(int player, int move, int PP);
+    void changeMaxPP(int player, int move, int maxpp);
     void gainPP(int player, int move, int gain);
     //Uproarer
     bool isThereUproar();

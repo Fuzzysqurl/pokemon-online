@@ -147,6 +147,10 @@ public:
         tempPoke(spot).move(move)->changePP(PP);
     }
 
+    void onMaxPPChange(int spot, int move, int maxpp) {
+        poke(spot).move(move)->changeMaxPP(maxpp);
+    }
+
     void onMoveChange(int spot, int slot, int move, bool definite) {
         tempPoke(spot).move(slot)->setNum(move);
         if (definite) {

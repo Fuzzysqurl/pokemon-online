@@ -4344,9 +4344,17 @@ struct MMMimic : public MM
             }
         }
 
-        //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
-        int pp = b.gen() > 4 ? (MoveInfo::PP(move, b.gen()) * 8/5) : 5;
-        b.changeTempMove(s, slot, move, pp);
+        //Gen 2 Mimic gives full PP count without PP ups
+        int pp = 5;
+        if (b.gen() > 4) {
+            pp = MoveInfo::PP(move, b.gen());
+        }
+        //Only Gen 3 and 4 match PP ups
+        int maxpp = MoveInfo::PP(move, b.gen());
+        if (b.gen().num == 3 || b.gen().num == 4) {
+            maxpp = maxpp*8/5;
+        }
+        b.changeTempMove(s, slot, move, pp, maxpp);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
 };
@@ -5711,8 +5719,17 @@ struct MMTransform : public MM {
 
         b.changeSprite(s, num);
 
+        //Gen 2 Max PP = Original Move's max PP
+        //Gen 3+4 Max PP = Original Move's max PP with PP Ups
+        //Gen 5+6 Max PP = 5
         for (int i = 0; i < 4; i++) {
-            b.changeTempMove(s,i,b.move(t,i));
+            int maxpp = MoveInfo::PP(b.move(t,i), b.gen());
+            if (b.gen().num == 3 || b.gen().num == 4) {
+                maxpp = maxpp*8/5;
+            } else if (b.gen() >= 5) {
+                maxpp = 5;
+            }
+            b.changeTempMove(s,i,b.move(t,i), 5, maxpp);
         }
 
         for (int i = 1; i < 6; i++)

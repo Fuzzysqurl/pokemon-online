@@ -157,6 +157,7 @@ protected:
     start(ChooseDraw, int player) end(player)
     start(UseItem, int player; int item) end(player, item)
     start(ItemCountChange, int player; int item; int count) end(player, item, count)
+    start(MaxPPChange, int spot; int move; int maxpp) end(spot, move, maxpp)
 
 #undef start
 #undef end
@@ -258,6 +259,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ClockStop);
     addCallback(ShiftSpots);
     addCallback(PPChange);
+    addCallback(MaxPPChange);
     addCallback(OfferChoice);
     addCallback(TempPPChange);
     addCallback(MoveChange);

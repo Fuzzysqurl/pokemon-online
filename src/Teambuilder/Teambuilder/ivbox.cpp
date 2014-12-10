@@ -59,7 +59,8 @@ void IvBox::updateAll()
         ui->hpchoice->hide();
 
         for (int i = 0; i < 6; i++) {
-            m_ivchangers[i]->setRange(0, 15);
+            m_ivchangers[i]->setRange(0, 15);            
+            m_ivchangers[i]->setValue(15);
         }
     } else {
         ui->hpivspin->setDisabled(false);
@@ -68,6 +69,7 @@ void IvBox::updateAll()
 
         for (int i = 0; i < 6; i++) {
             m_ivchangers[i]->setRange(0, 31);
+            m_ivchangers[i]->setValue(31);
         }
     }
 

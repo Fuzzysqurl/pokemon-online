@@ -29,6 +29,7 @@ public:
 
     void setNum(int newnum);
     void changePP(int newPP);
+    void changeMaxPP(int newPP);
     Pokemon::gen gen() const;
 
     void adaptTo(const BattleMove *move);
@@ -37,6 +38,7 @@ public:
 signals:
     void numChanged();
     void PPChanged();
+    void MaxPPChanged();
 private:
     bool hasOwnerShip;
     BattleMove *moveData;

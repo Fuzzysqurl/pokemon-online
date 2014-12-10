@@ -181,6 +181,9 @@ public:
     void onPPChange(int spot, int move, int PP) {
         makeEvent("onPPChange", spot, move, PP);
     }
+    void onMaxPPChange(int spot, int move, int maxpp) {
+        makeEvent("onMaxPPChange", spot, move, maxpp);
+    }
     void onOfferChoice(int player, const BattleChoices &choice) {
         (void) choice;
         makeEvent("onOfferChoice", player/*, const BattleChoices &choice*/);

@@ -3447,7 +3447,16 @@ void BattleSituation::changeDefMove(int player, int slot, int move)
     poke(player).move(slot).load(gen());
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(DefMove), quint8(slot), quint16(move));
-    changePP(player,slot,poke(player).move(slot).totalPP());
+
+    //Sketch changes current PP to the max PP of the move without PP ups
+    int pp = MoveInfo::PP(move, gen());
+    int maxpp = pp;
+    //Gen 3 and Gen 4 matches PP ups for Max PP
+    if (gen().num == 3 || gen().num == 4) {
+        maxpp = maxpp*8/5;
+    }
+    changePP(player,slot,pp);
+    changeMaxPP(player,slot,maxpp);
 }
 
 void BattleSituation::inflictSubDamage(int player, int damage, int source)
@@ -3834,6 +3843,16 @@ void BattleSituation::changePP(int player, int move, int PP)
         }
     } else {
         BattleBase::changePP(player, move, PP);
+    }
+}
+
+void BattleSituation::changeMaxPP(int player, int move, int maxpp)
+{
+    if (isOut(player)) {
+        fpoke(player).mpps[move] = maxpp;
+
+        poke(player).move(move).totalPP() = maxpp;
+        notify(this->player(player), ChangeMaxPP, player, quint8(move), fpoke(player).mpps[move]);
     }
 }
 

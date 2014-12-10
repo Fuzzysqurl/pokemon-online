@@ -121,6 +121,7 @@ protected:
     start(ClockStop, onClockStop, int player, int time) end(onClockStop, player, time)
     start(ShiftSpots, onShiftSpots, int player, int spot1, int spot2, bool silent) end(onShiftSpots, player, spot1, spot2, silent)
     start(PPChange, onPPChange, int spot, int move, int PP) end(onPPChange, spot, move, PP)
+    start(MaxPPChange, onMaxPPChange, int spot, int move, int maxpp) end(onMaxPPChange, spot, move, maxpp)
     start(OfferChoice, onOfferChoice, int player, std::shared_ptr<BattleChoices>* choice) end (onOfferChoice, player, *choice->get())
     start(TempPPChange, onTempPPChange, int spot, int move, int PP) end (onTempPPChange, spot, move, PP)
     start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)

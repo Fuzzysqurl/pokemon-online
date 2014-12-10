@@ -483,6 +483,14 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         output<BattleEnum::PPChange>(spot, move, pp);
         break;
     }
+    case BC::ChangeMaxPP:
+    {
+        quint8 move, maxpp;
+        in >> move >> maxpp;
+
+        output<BattleEnum::MaxPPChange>(spot, move, maxpp);
+        break;
+    }
     case BC::OfferChoice:
     {
         auto c = mk<BattleChoices>();

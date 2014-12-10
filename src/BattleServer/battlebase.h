@@ -89,6 +89,7 @@ public:
     bool isOut(int poke) const;
     bool hasSubstitute(int player);
     int PP(int player, int slot) const;
+    int maxPP(int player, int slot) const;
     bool hasMove(int player, int move);
     int move(int player, int slot);
     bool hasMoved(int slot);
@@ -352,6 +353,7 @@ public:
 
         int moves[4];
         quint8 pps[4];
+        quint8 mpps[4];
         quint8 dvs[6];
         int stats[6];
         //The boost in HP and sdef are useless but avoids headaches
@@ -474,7 +476,8 @@ public:
 
     virtual void losePP(int player, int move, int loss);
     virtual void changePP(int player, int move, int PP);
-    virtual void changeTempMove(int player, int slot, int move, int pp=5);
+    virtual void changeMaxPP(int player, int move, int maxpp);
+    virtual void changeTempMove(int player, int slot, int move, int pp, int maxpp);
 
     bool testFail(int player);
     virtual bool testAccuracy(int player, int target, bool silent = false) = 0;

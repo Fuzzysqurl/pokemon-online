@@ -1434,6 +1434,7 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     for (int i = 0; i < 4; i++) {
         moves[i] = p.move(i).num();
         pps[i] = p.move(i).PP();
+        mpps[i] = p.move(i).PP();
     }
 
     for (int i = 1; i < 6; i++)
@@ -1557,6 +1558,10 @@ int BattleBase::PP(int player, int slot) const
     }
 }
 
+int BattleBase::maxPP(int player, int slot) const
+{
+    return fpoke(player).mpps[slot];
+}
 
 bool BattleBase::hasMove(int player, int move) {
     for (int i = 0; i < 4; i++) {
@@ -1925,6 +1930,15 @@ void BattleBase::changePP(int player, int move, int PP)
     }
     poke(player).move(move).PP() = PP;
     notify(this->player(player), ChangePP, player, quint8(move), quint8(this->PP(player, move)));
+}
+
+void BattleBase::changeMaxPP(int player, int move, int maxpp)
+{
+    if (isOut(player)) {
+        fpoke(player).mpps[move] = maxpp;
+    }
+    poke(player).move(move).totalPP() = maxpp;
+    notify(this->player(player), ChangeMaxPP, player, quint8(move), quint8(this->maxPP(player, move)));
 }
 
 bool BattleBase::testFail(int player)
@@ -2342,7 +2356,7 @@ void BattleBase::failSilently(int player)
 }
 
 
-void BattleBase::changeTempMove(int player, int slot, int move, int pp)
+void BattleBase::changeTempMove(int player, int slot, int move, int pp, int maxpp)
 {
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
@@ -2351,7 +2365,11 @@ void BattleBase::changeTempMove(int player, int slot, int move, int pp)
     if (minpp < pp) {
         pp = minpp;
     }
+    if (maxpp > pp) {
+        maxpp = pp;
+    }
     changePP(player,slot,pp);
+    changeMaxPP(player, slot, maxpp);
 }
 
 Pokemon::uniqueId BattleBase::pokenum(int player) {

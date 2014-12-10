@@ -64,6 +64,14 @@ void MoveProxy::changePP(int newPP) {
     emit PPChanged();
 }
 
+void MoveProxy::changeMaxPP(int newPP) {
+    if (newPP == d()->totalPP()) {
+        return;
+    }
+    d()->totalPP() = newPP;
+    emit MaxPPChanged();
+}
+
 PokeProxy::PokeProxy() : hasOwnerShip(true), pokeData(new ShallowBattlePoke())
 {
     if (hasExposedData()) {
