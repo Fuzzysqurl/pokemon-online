@@ -35,13 +35,26 @@ namespace Version
         NumberOfGens = 6
     };
 
-    static const int avatarSize[] = {
-        56,
-        60,
-        64,
-        80,
-        96,
-        120
+    static const int myPos[] = {
+    /*Positioning of the Sprite in OBW */
+    /*Single, Left,   Middle,   Right */
+        0,0,  0,0,  0,0,   0,0, //Gen 1
+        0,0,  0,0,  0,0,   0,0, //Gen 2
+        0,0,  0,0,  0,0,   0,0, //Gen 3
+        0,0,  0,0,  0,0,   0,0, //Gen 4
+        0,0,  0,0,  0,0,   0,0, //Gen 5
+        0,0,  5,115,  85,105,   165,115 //Gen 6
+    };
+
+    static const int oppPos[] = {
+    /*Positioning of the Sprite in OBW */
+    /*Single, Left,   Middle,   Right */
+        0,0,  0,0,  0,0,   0,0, //Gen 1
+        0,0,  0,0,  0,0,   0,0, //Gen 2
+        0,0,  0,0,  0,0,   0,0, //Gen 3
+        0,0,  0,0,  0,0,   0,0, //Gen 4
+        0,0,  0,0,  0,0,   0,0, //Gen 5
+        0,0,  115,5,  195,15,   275,5, //Gen 6
     };
 }
 
