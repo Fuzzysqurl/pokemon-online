@@ -156,12 +156,13 @@ void PokeEdit::toggleHackmons()
 {
     hackMons = !hackMons;
     fillMoves();
+    ui->levelSettings->fillAbilities();
+    ui->levelSettings->updateAll();
     ui->evbox->changeMaximumEv(hackMons);
     if (!hackMons) {
         poke().runCheck();
         ui->evbox->updateAll();
     }
-    ui->levelSettings->fillAbilities();
 }
 
 void PokeEdit::openPokemonSelection()
