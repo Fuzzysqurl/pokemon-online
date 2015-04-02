@@ -51,7 +51,9 @@ void TeamMenu::addMenus(QMenuBar *b)
     QAction *adv = options->addAction(tr("&Advanced menu"), this, SLOT(toggleAdvanced()));
     adv->setCheckable(true);
     adv->setChecked(!PokeEdit::advancedWindowClosed);
-
+    QAction *hackMons = options->addAction(tr("&Show Illegal"), this, SLOT(toggleHackmons()));
+    hackMons->setCheckable(true);
+    adv->setChecked(PokeEdit::hackMons);
     advancedMenu = adv;
 }
 
@@ -164,6 +166,13 @@ void TeamMenu::toggleAdvanced()
         foreach(PokeEdit *p, ui->pokemons) {
             p->showAdvancedTab();
         }
+    }
+}
+
+void TeamMenu::toggleHackmons()
+{
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->toggleHackmons();
     }
 }
 

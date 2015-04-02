@@ -3,6 +3,7 @@
 #include <TeambuilderLibrary/theme.h>
 #include "evbox.h"
 #include "ui_evbox.h"
+#include "Teambuilder/pokeedit.h"
 
 EvBox::EvBox(QWidget *parent) :
     QWidget(parent),
@@ -141,7 +142,7 @@ void EvBox::updateMain()
 void EvBox::changeEV(int newValue)
 {
     int stat = sender()->property("stat").toInt();
-    poke().setEV(stat, newValue/4*4);
+    poke().setEV(stat, newValue/4*4, PokeEdit::hackMons);
     updateEV(stat);
     updateMain();
 }
@@ -182,4 +183,9 @@ void EvBox::changeToMinusBoost()
 
     emit natureChanged(NatureInfo::NatureOf(plus,minus));
     emit natureBoostChanged();
+}
+
+void EvBox::changeMaximumEv(bool hack)
+{
+    ui->totalslider->setProperty(("maximum"), hack ? 1512 : 508);
 }

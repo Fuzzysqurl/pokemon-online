@@ -136,7 +136,7 @@ public:
     quint8 EV(int stat) const;
     int EVSum() const;
 
-    void setEV(int stat, quint8 EV);
+    void setEV(int stat, quint8 EV, bool hack = false);
 
     enum Flags {
         hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs,

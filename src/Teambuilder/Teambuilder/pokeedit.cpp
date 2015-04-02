@@ -20,6 +20,7 @@
 #include "teambuilder.h"
 
 bool PokeEdit::advancedWindowClosed = false;
+bool PokeEdit::hackMons = false;
 
 PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
@@ -73,57 +74,7 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     /* 20 characters for the name. Longest name: Vivillon-Archipelago = 20 characters */
     ui->nickname->setValidator(new QNickValidator(ui->nickname, 20));
 
-    movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
-    QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
-    filter->setSourceModel(movesModel);
-    ui->moveChoice->setModel(filter);
-
-#ifdef QT5
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Priority, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
-#else
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
-#endif
-    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
-    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
-    ui->moveChoice->setIconSize(Theme::TypePicture(Type::Normal).size());
-
-    ui->moveChoice->sortByColumn(PokeMovesModel::Name, Qt::AscendingOrder);
-
-    m_moves[0] = ui->move1;
-    m_moves[1] = ui->move2;
-    m_moves[2] = ui->move3;
-    m_moves[3] = ui->move4;
-
-    connect(ui->speciesLabel, SIGNAL(clicked()), SLOT(on_pokemonFrame_clicked()));
-
-    connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
-
-    /* the four move choice items */
-    for (int i = 0; i < 4; i++)
-    {
-        QCompleter *completer = new QCompleter(m_moves[i]);
-        completer->setModel(ui->moveChoice->model());
-        completer->setCompletionColumn(PokeMovesModel::Name);
-        completer->setCaseSensitivity(Qt::CaseInsensitive);
-        completer->setCompletionMode(QCompleter::PopupCompletion);
-        completer->setCompletionRole(Qt::DisplayRole);
-        m_moves[i]->setCompleter(completer);
-
-        completer->setProperty("move", i);
-        m_moves[i]->setProperty("move", i);
-
-        connect(completer, SIGNAL(activated(QString)), SLOT(changeMove()));
-        connect(m_moves[i], SIGNAL(returnPressed()), SLOT(changeMove()));
-        connect(m_moves[i], SIGNAL(editingFinished()), SLOT(changeMove()));
-    }
-
+    fillMoves();
     connect(ui->levelSettings, SIGNAL(levelUpdated()), this, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(levelUpdated()), ui->ivbox, SLOT(updateStats()));
     connect(ui->levelSettings, SIGNAL(genderUpdated()), this, SLOT(updatePicture()));
@@ -141,6 +92,56 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     updateAll();
 }
 
+void PokeEdit::fillMoves()
+{
+    movesModel = new PokeMovesModel(m_poke->num(), m_poke->gen(), this, hackMons);
+    QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
+    filter->setSourceModel(movesModel);
+    ui->moveChoice->setModel(filter);
+    ui->moveChoice->disconnect(SIGNAL(activated(QModelIndex)), this);
+    connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
+#ifdef QT5
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Priority, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+#else
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+#endif
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
+    ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
+    ui->moveChoice->setIconSize(Theme::TypePicture(Type::Normal).size());
+
+    ui->moveChoice->sortByColumn(PokeMovesModel::Name, Qt::AscendingOrder);
+    m_moves[0] = ui->move1;
+    m_moves[1] = ui->move2;
+    m_moves[2] = ui->move3;
+    m_moves[3] = ui->move4;
+    connect(ui->speciesLabel, SIGNAL(clicked()), SLOT(on_pokemonFrame_clicked()));
+
+    /* the four move choice items */
+    for (int i = 0; i < 4; i++)
+    {
+        QCompleter *completer = new QCompleter(m_moves[i]);
+        completer->setModel(ui->moveChoice->model());
+        completer->setCompletionColumn(PokeMovesModel::Name);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+        completer->setCompletionMode(QCompleter::PopupCompletion);
+        completer->setCompletionRole(Qt::DisplayRole);
+        m_moves[i]->setCompleter(completer);
+
+        completer->setProperty("move", i);
+        m_moves[i]->setProperty("move", i);
+        connect(completer, SIGNAL(activated(QString)), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(returnPressed()), SLOT(changeMove()));
+        connect(m_moves[i], SIGNAL(editingFinished()), SLOT(changeMove()));
+    }
+}
+
 void PokeEdit::closeAdvancedTab()
 {
     findChild<QWidget*>("AdvancedTab")->close();
@@ -149,6 +150,17 @@ void PokeEdit::closeAdvancedTab()
 void PokeEdit::showAdvancedTab()
 {
     findChild<QWidget*>("AdvancedTab")->show();
+}
+
+void PokeEdit::toggleHackmons()
+{
+    hackMons = !hackMons;
+    fillMoves();
+    ui->evbox->changeMaximumEv(hackMons);
+    if (!hackMons) {
+        poke().runCheck();
+        ui->evbox->updateAll();
+    }
 }
 
 void PokeEdit::openPokemonSelection()
@@ -213,7 +225,7 @@ void PokeEdit::changeMove()
 void PokeEdit::setMove(int slot, int move)
 {
     try {
-        poke().setMove(move, slot, true);
+        poke().setMove(move, slot, !hackMons);
         m_moves[slot]->setText(MoveInfo::Name(move));
 
         if (move == Move::Return) {

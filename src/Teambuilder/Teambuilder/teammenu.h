@@ -32,6 +32,7 @@ public slots:
     /* Close the advanced tab */
     void toggleAdvanced();
     void closeAdvanced();
+    void toggleHackmons();
     /* Called from boxes, when team is changed */
     void updatePokemons();
 private slots:

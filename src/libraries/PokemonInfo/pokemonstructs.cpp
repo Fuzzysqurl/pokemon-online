@@ -326,8 +326,12 @@ void PokePersonal::controlEVs(int stat)
     }
 }
 
-void PokePersonal::setEV(int stat, quint8 val)
+void PokePersonal::setEV(int stat, quint8 val, bool hack)
 {
+    if (hack) {
+        m_EVs[stat] = val;
+        return;
+    }
     if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && gen() < 5 && val > 100)
     {
         val = 100;

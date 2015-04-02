@@ -12,6 +12,7 @@ class QSlider;
 class QLabel;
 class QLineEdit;
 class QImageButtonLR;
+class PokeEdit;
 
 class EvBox : public QWidget
 {
@@ -21,7 +22,7 @@ public:
     explicit EvBox(QWidget *parent = 0);
     void setPoke(PokeTeam *poke);
     void updateAll();
-
+    void changeMaximumEv(bool hack);
     ~EvBox();
 
 signals:
