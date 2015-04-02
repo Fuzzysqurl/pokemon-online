@@ -161,6 +161,7 @@ void PokeEdit::toggleHackmons()
         poke().runCheck();
         ui->evbox->updateAll();
     }
+    ui->levelSettings->fillAbilities();
 }
 
 void PokeEdit::openPokemonSelection()

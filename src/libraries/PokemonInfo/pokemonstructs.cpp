@@ -186,10 +186,14 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
     }
 }
 
-void PokePersonal::setAbility(int abilityNum) throw(QString)
+void PokePersonal::setAbility(int abilityNum, bool hack) throw(QString)
 {
     QSet<int> invalid_moves;
     QString error;
+    if (hack) {
+        ability() = abilityNum;
+        return;
+    }
     if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],abilityNum,gender(),level(),false,&invalid_moves, &error)) {
         throw error;
     } else {

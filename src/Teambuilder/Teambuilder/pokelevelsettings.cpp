@@ -3,6 +3,7 @@
 #include <PokemonInfo/pokemonstructs.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include "Teambuilder/pokelevelsettings.h"
+#include "Teambuilder/pokeedit.h"
 #include "ui_pokelevelsettings.h"
 
 PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
@@ -10,14 +11,7 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     ui(new Ui::PokeLevelSettings)
 {
     ui->setupUi(this);
-    m_abilities[0] = ui->ability1;
-    m_abilities[1] = ui->ability2;
-    m_abilities[2] = ui->ability3;
-
-    QButtonGroup *abilityGroup = new QButtonGroup(this);
-    for (int i =0; i < 3; i++) {
-        abilityGroup->addButton(m_abilities[i]);
-    }
+    fillAbilities();
     QButtonGroup *genderGroup = new QButtonGroup(this);
     genderGroup->addButton(ui->maleButton);
     genderGroup->addButton(ui->femaleButton);
@@ -30,14 +24,44 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     // female if it is.
     //connect(ui->femaleButton, SIGNAL(toggled(bool)), this, SLOT(changeGender()));
 
-    for (int i = 0; i < 3; i++) {
-        connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
-    }
 }
 
 PokeLevelSettings::~PokeLevelSettings()
 {
     delete ui;
+}
+
+void PokeLevelSettings::fillAbilities()
+{
+    if (!PokeEdit::hackMons) {
+        ui->ability->hide();
+        m_abilities[0] = ui->ability1;
+        m_abilities[1] = ui->ability2;
+        m_abilities[2] = ui->ability3;
+
+        QButtonGroup *abilityGroup = new QButtonGroup(this);
+        for (int i =0; i < 3; i++) {
+            abilityGroup->addButton(m_abilities[i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
+        }
+    } else {
+        ui->ability1->hide();
+        ui->ability2->hide();
+        ui->ability3->hide();
+        QStringList abilities;
+
+        for (int i = 0; i < AbilityInfo::NumberOfAbilities(poke().gen()); i++) {
+            abilities.push_back(AbilityInfo::Name(i));
+        }
+        qSort(abilities);
+        abilities.removeAll("");
+
+        ui->ability->setModel(new QStringListModel(abilities, this));
+        ui->ability->show();
+        connect(ui->ability, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAbility()));
+    }
 }
 
 void PokeLevelSettings::setPoke(PokeTeam *poke)
@@ -87,16 +111,19 @@ void PokeLevelSettings::changeAbility()
     }
 
     int abilityToSet;
-    if (m_abilities[1]->isChecked()) {
-        abilityToSet = poke().abilities().ab(1);
-    } else if (m_abilities[2]->isChecked()) {
-        abilityToSet = poke().abilities().ab(2);
+    if (!PokeEdit::hackMons) {
+        if (m_abilities[1]->isChecked()) {
+            abilityToSet = poke().abilities().ab(1);
+        } else if (m_abilities[2]->isChecked()) {
+            abilityToSet = poke().abilities().ab(2);
+        } else {
+            abilityToSet = poke().abilities().ab(0);
+        }
     } else {
-        abilityToSet = poke().abilities().ab(0);
+        abilityToSet = AbilityInfo::Number(ui->ability->currentText());
     }
-
     try {
-        poke().setAbility(abilityToSet);
+        poke().setAbility(abilityToSet, PokeEdit::hackMons);
     } catch (const QString &s) {
         QMessageBox::information(NULL, tr("Invalid moveset"), s);
         for(int i = 0; i < 3; i++) {
