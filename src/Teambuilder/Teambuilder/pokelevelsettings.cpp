@@ -54,7 +54,7 @@ void PokeLevelSettings::fillAbilities()
         ui->ability2->hide();
         ui->ability3->hide();
         QStringList abilities;
-        for (int i = 0; i < AbilityInfo::NumberOfAbilities(poke().gen().num); i++) {
+        for (int i = 1; i < AbilityInfo::NumberOfAbilities(poke().gen().num); i++) {
             abilities.push_back(AbilityInfo::Name(i));
         }
         qSort(abilities);
