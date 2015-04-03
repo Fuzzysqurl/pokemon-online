@@ -53,7 +53,8 @@ public slots:
     void setNum(const QString &num);
     void setItem(int num);
     void openPokemonSelection();
-    void toggleHackmons();
+    void hackMonsOn();
+    void hackMonsOff();
     void fillMoves();
 signals:
     void numChanged();

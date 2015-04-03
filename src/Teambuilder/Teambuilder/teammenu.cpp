@@ -53,8 +53,9 @@ void TeamMenu::addMenus(QMenuBar *b)
     adv->setChecked(!PokeEdit::advancedWindowClosed);
     QAction *hackMons = options->addAction(tr("&Show Illegal"), this, SLOT(toggleHackmons()));
     hackMons->setCheckable(true);
-    adv->setChecked(PokeEdit::hackMons);
+    hackMons->setChecked(PokeEdit::hackMons);
     advancedMenu = adv;
+    hacks = hackMons;
 }
 
 void TeamMenu::setupUi()
@@ -171,8 +172,25 @@ void TeamMenu::toggleAdvanced()
 
 void TeamMenu::toggleHackmons()
 {
+    if (!PokeEdit::hackMons) {
+        removeHackmons();
+    } else {
+        PokeEdit::hackMons = false;
+        foreach(PokeEdit *p, ui->pokemons) {
+            p->hackMonsOn();
+        }
+    }
+}
+
+void TeamMenu::removeHackmons()
+{
+    PokeEdit::hackMons = true;
     foreach(PokeEdit *p, ui->pokemons) {
-        p->toggleHackmons();
+        p->hackMonsOff();
+    }
+
+    if (hacks) {
+        hacks->setChecked(PokeEdit::hackMons);
     }
 }
 

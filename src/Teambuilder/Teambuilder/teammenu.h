@@ -33,6 +33,7 @@ public slots:
     void toggleAdvanced();
     void closeAdvanced();
     void toggleHackmons();
+    void removeHackmons();
     /* Called from boxes, when team is changed */
     void updatePokemons();
 private slots:
@@ -58,6 +59,7 @@ private:
 
     TeamHolder *m_team;
     QPointer<QAction> advancedMenu;
+    QPointer<QAction> hacks;
     Pokemon::gen lastGen;
     TeamHolder &team() { return *m_team;}
     const TeamHolder &team() const { return *m_team;}

@@ -152,17 +152,24 @@ void PokeEdit::showAdvancedTab()
     findChild<QWidget*>("AdvancedTab")->show();
 }
 
-void PokeEdit::toggleHackmons()
+void PokeEdit::hackMonsOn()
 {
-    hackMons = !hackMons;
     fillMoves();
     ui->levelSettings->fillAbilities();
     ui->levelSettings->updateAll();
-    ui->evbox->changeMaximumEv(hackMons);
-    if (!hackMons) {
-        poke().runCheck();
-        ui->evbox->updateAll();
-    }
+    ui->evbox->changeMaximumEv(true);
+    movesModel->setPokemon(poke().num(), poke().gen());
+}
+
+void PokeEdit::hackMonsOff()
+{
+    fillMoves();
+    ui->levelSettings->fillAbilities();
+    ui->levelSettings->updateAll();
+    ui->evbox->changeMaximumEv(false);
+    movesModel->setPokemon(poke().num(), poke().gen());
+    poke().runCheck();
+    ui->evbox->updateAll();
 }
 
 void PokeEdit::openPokemonSelection()
