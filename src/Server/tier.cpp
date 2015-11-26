@@ -147,6 +147,13 @@ void Tier::loadSqlFromFile()
         query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
         QSqlDatabase::database().commit();
+    } else if (count == 7) {
+        /* Outdated database, before winCount was introduced */
+        QSqlDatabase::database().transaction();
+        query.exec(QString("alter table %1 add column winCount int").arg(sql_table));
+        query.exec(QString("update %1 set winCount=winCount").arg(sql_table));
+
+        QSqlDatabase::database().commit();
     } else if (!query.next() && count != 8) {
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
@@ -202,11 +209,11 @@ void Tier::loadSqlFromFile()
 
                     query.exec();
                 }
-            } else if (count == 7) {
+            } else if (count == 6 || count == 7) {
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
                     QStringList mmr = m2.split('%');
-                    if (mmr.size() != 7)
+                    if (mmr.size() != 6 && mmr.size != 7)
                         continue;
 
                     query.bindValue(":name", mmr[0].toLower());
@@ -215,7 +222,8 @@ void Tier::loadSqlFromFile()
                     query.bindValue(":displayed_rating", mmr[3].toInt());
                     query.bindValue(":last_check_time", mmr[4].toInt());
                     query.bindValue(":bonus_time", mmr[5].toInt());
-                    query.bindValue(":winCount", mmr[6].toInt());
+                    if (mmr.size() == 7)
+                        query.bindValue(":winCount", mmr[6].toInt());
 
                     query.exec();
                 }
