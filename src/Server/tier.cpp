@@ -151,7 +151,7 @@ void Tier::loadSqlFromFile()
         /* Outdated database, before winCount was introduced */
         QSqlDatabase::database().transaction();
         query.exec(QString("alter table %1 add column winCount int").arg(sql_table));
-        query.exec(QString("update %1 set winCount=winCount").arg(sql_table));
+        query.exec(QString("update %1 set winCount=0").arg(sql_table));
 
         QSqlDatabase::database().commit();
     } else if (!query.next() && count != 8) {
@@ -213,7 +213,7 @@ void Tier::loadSqlFromFile()
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
                     QStringList mmr = m2.split('%');
-                    if (mmr.size() != 6 && mmr.size != 7)
+                    if (mmr.size() != 6 && mmr.size() != 7)
                         continue;
 
                     query.bindValue(":name", mmr[0].toLower());
