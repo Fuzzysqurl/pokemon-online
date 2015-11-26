@@ -24,7 +24,8 @@ QString MemberRating::toString() const
 {
     return name + "%" + QString::number(matches).rightJustified(5,'0',true) + "%" +
             QString::number(rating).rightJustified(5,'0',true) + "%" + QString::number(displayed_rating).rightJustified(5,'0',true) + "%" +
-            QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,' ',true) + "\n";
+            QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,' ',true) +
+            "%" + QString::number(winCount).rightJustified(5,'0',true) + "\n";
 }
 
 /* Explanations here: http://pokemon-online.eu/threads/how-to-change-the-rating-system-to-include-auto-decrease.3045/
@@ -35,6 +36,9 @@ void MemberRating::changeRating(int opponent_rating, bool win)
 
     if (matches < 9999) {
         matches += 1;
+    }
+    if (win && winCount < 9999) {
+        winCount += 1;
     }
 
     rating = rating + (win ? change.first : change.second);
@@ -262,6 +266,7 @@ void Tier::loadFromFile()
             m.displayed_rating = mmr[3].toInt();
             m.last_check_time = mmr[4].toInt();
             m.bonus_time = mmr[5].trimmed().toInt();
+            m.winCount = mmr[6].toInt();
         }
 
         m.node = rankings.insert(m.displayed_rating, m.name);
@@ -634,6 +639,21 @@ int Tier::ratedBattles(const QString &name)
             return holder.member(name).matches;
         } else {
             return ratings[name].matches;
+        }
+    } else {
+        return 0;
+    }
+}
+
+int Tier::ratedWins(const QString &name)
+{
+    if (!holder.isInMemory(name))
+        loadMemberInMemory(name);
+    if (exists(name)) {
+        if (isSql()) {
+            return holder.member(name).winCount;
+        } else {
+            return ratings[name].winCount;
         }
     } else {
         return 0;
