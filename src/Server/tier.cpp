@@ -147,15 +147,15 @@ void Tier::loadSqlFromFile()
         query.exec(QString("create index %1_tierrating_index on %1 (displayed_rating)").arg(sql_table));
 
         QSqlDatabase::database().commit();
-    } else if (!query.next() && count != 7) {
+    } else if (!query.next() && count != 8) {
         if (SQLCreator::databaseType == SQLCreator::PostGreSQL) {
             /* The only way to have an auto increment field with PostGreSQL is to my knowledge using the serial type */
-            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
+            query.exec(QString("create table %1 (id serial, name varchar(20), rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, winCount int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::MySQL){
-            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, primary key(id))").arg(sql_table));
+            query.exec(QString("create table %1 (id integer auto_increment, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, winCount int, primary key(id))").arg(sql_table));
         } else if (SQLCreator::databaseType == SQLCreator::SQLite){
             /* The only way to have an auto increment field with SQLite is to my knowledge having a 'integer primary key' field -- that exact quote */
-            query.exec(QString("create table if not exists %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int)").arg(sql_table));
+            query.exec(QString("create table if not exists %1 (id integer primary key autoincrement, name varchar(20) unique, rating int, displayed_rating int, last_check_time int, bonus_time int, matches int, winCount int)").arg(sql_table));
         } else {
             throw QString("Using a not supported database");
         }
@@ -184,8 +184,8 @@ void Tier::loadSqlFromFile()
             int count = members[0].split('%').size();
 
             QSqlDatabase::database().transaction();
-            query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches) "
-                                  "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches)").arg(sql_table));
+            query.prepare(QString("insert into %1(name, rating, displayed_rating, last_check_time, bonus_time, matches, winCount) "
+                                  "values (:name, :rating, :displayed_rating, :last_check_time, :bonus_time, :matches, :winCount)").arg(sql_table));
             if (count == 3) {
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
@@ -202,11 +202,11 @@ void Tier::loadSqlFromFile()
 
                     query.exec();
                 }
-            } else if (count == 6) {
+            } else if (count == 7) {
                 foreach(QString member, members) {
                     QString m2 = member.toLower();
                     QStringList mmr = m2.split('%');
-                    if (mmr.size() != 6)
+                    if (mmr.size() != 7)
                         continue;
 
                     query.bindValue(":name", mmr[0].toLower());
@@ -215,6 +215,7 @@ void Tier::loadSqlFromFile()
                     query.bindValue(":displayed_rating", mmr[3].toInt());
                     query.bindValue(":last_check_time", mmr[4].toInt());
                     query.bindValue(":bonus_time", mmr[5].toInt());
+                    query.bindValue(":winCount", mmr[6].toInt());
 
                     query.exec();
                 }
@@ -749,7 +750,7 @@ void Tier::exportDatabase() const
     QSqlQuery q;
     q.setForwardOnly(true);
 
-    q.exec(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1 order by name asc").arg(sql_table));
+    q.exec(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time, winCount from %1 order by name asc").arg(sql_table));
 
     while (q.next()) {
         MemberRating m(q.value(0).toString(), q.value(1).toInt(), q.value(2).toInt(), q.value(3).toInt(), q.value(4).toInt(), q.value(5).toInt());
@@ -768,7 +769,7 @@ void Tier::processQuery(QSqlQuery *q, const QVariant &name, int type, WaitingObj
     if (type == GetInfoOnUser) {
         assert(isSql());//Should never reach here otherwise
 
-        q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time from %1 where name=? limit 1").arg(sql_table));
+        q->prepare(QString("select matches, rating, displayed_rating, last_check_time, bonus_time, winCount from %1 where name=? limit 1").arg(sql_table));
         q->addBindValue(name);
         q->exec();
         if (!q->next()) {
@@ -842,10 +843,10 @@ void Tier::insertMember(QSqlQuery *q, void *data, int update)
     if (isSql()) {
         if (update)
             q->prepare(QString("update %1 set matches=:matches, rating=:rating, displayed_rating=:displayed_rating, last_check_time=:last_check_time,"
-                               "bonus_time=:bonus_time where name=:name").arg(sql_table));
+                               "bonus_time=:bonus_time, winCount=:winCount where name=:name").arg(sql_table));
         else
-            q->prepare(QString("insert into %1(name, matches, rating, displayed_rating, last_check_time, bonus_time)"
-                               "values(:name, :matches, :rating, :displayed_rating, :last_check_time, :bonus_time)").arg(sql_table));
+            q->prepare(QString("insert into %1(name, matches, rating, displayed_rating, last_check_time, bonus_time, winCount)"
+                               "values(:name, :matches, :rating, :displayed_rating, :last_check_time, :bonus_time, :winCount)").arg(sql_table));
 
         q->bindValue(":name", m.name.toLower());
         q->bindValue(":matches", m.matches);
@@ -853,6 +854,7 @@ void Tier::insertMember(QSqlQuery *q, void *data, int update)
         q->bindValue(":displayed_rating", m.displayed_rating);
         q->bindValue(":last_check_time", m.last_check_time);
         q->bindValue(":bonus_time", m.bonus_time);
+        q->bindValue(":winCount", m.winCount);
 
         q->exec();
         q->finish();
@@ -1368,7 +1370,7 @@ void Tier::processDailyRun()
 
         QSqlDatabase::database().transaction();
 
-        query.prepare(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time from %1").arg(sql_table));
+        query.prepare(QString("select name, matches, rating, displayed_rating, last_check_time, bonus_time, winCount from %1").arg(sql_table));
         query.exec();
 
         QStringList names;
