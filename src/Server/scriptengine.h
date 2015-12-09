@@ -414,8 +414,8 @@ public:
     Q_INVOKABLE QScriptValue pokeGenders(int poke);
 
     Q_INVOKABLE QScriptValue banList();
-    Q_INVOKABLE void ban(QString name);
-    Q_INVOKABLE void tempBan(QString name, int time);
+    Q_INVOKABLE void ban(int src, QString name);
+    Q_INVOKABLE void tempBan(QString name, int time, int src);
     Q_INVOKABLE void unban(QString name);
     Q_INVOKABLE bool banned(const QString &ip);
 

@@ -741,19 +741,31 @@ void Server::ban(int id, int src) {
 
 void Server::tempBan(int dest, int src, int time)
 {
-    time = int(std::max(1, std::min(time, 1440)));
+    //Mods can only ban for a max of 1440 minutes (1 day)
+    int maxTime = player(src)->auth() < 2 ? 1440 : time;
+    time = int(std::max(1, std::min(time, maxTime)));
+
+    //convert the minutes to hours/days/weeks
+    int t;
+    int d[4] = {10080, 1440, 60, 1};
+    QStringList w = {"week", "day", "hour", "minute"};
+    QStringList list;
+    for (int i = 0; i < 4; i++) {
+        t = std::floor(time / d[i]);
+        if (t > 0) {
+            list.push_back(t + w[i] + (t > 1 ? "" : "s"));
+        }
+        time -= t * d[i];
+        if (time == 0) {
+            break;
+        }
+    }
+    QString timeStr = list.join(", ");
+
     if(src == 0) {
-        if(time == 1) {
-            forcePrint(QString("The server banned %1 for %2 minute").arg(name(dest)).arg(time));
-        } else {
-            forcePrint(QString("The server banned %1 for %2 minutes").arg(name(dest)).arg(time));
-        }
+        forcePrint(QString("The server banned %1 for %2.").arg(name(dest)).arg(timeStr));
     } else {
-        if(time == 1) {
-            forcePrint(QString("%1 was banned by %2 for %3 minute").arg(name(dest)).arg(name(src)).arg(time));
-        } else {
-            forcePrint(QString("%1 was banned by %2 for %3 minutes").arg(name(dest)).arg(name(src)).arg(time));
-        }
+        forcePrint(QString("%1 was banned by %2 for %3.").arg(name(dest)).arg(name(src)).arg(timeStr));
     }
     notifyGroup(All, NetworkServ::PlayerTBan, qint32(dest), qint32(src), qint32(time));
     SecurityManager::ban(name(dest), time);
@@ -1502,7 +1514,7 @@ void Server::playerTempBan(int src, int dest, int time)
     }
 
     if(myengine->beforePlayerBan(src, dest, time)) {
-        if(!playerExist(src) || !playerExist(dest)) {
+        if (!playerExist(src) || !playerExist(dest)) {
             return;
         }
         tempBan(dest, src, time);

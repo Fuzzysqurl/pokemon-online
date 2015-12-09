@@ -2532,23 +2532,21 @@ QScriptValue ScriptEngine::banList()
     return result;
 }
 
-void ScriptEngine::ban(QString name)
+void ScriptEngine::ban(int src, QString name)
 {
-    SecurityManager::ban(name);
     if(loggedIn(myserver->id(name))) {
-        myserver->silentKick(myserver->id(name));
+        myserver->playerBan(src, myserver->id(name));
+    } else {
+        SecurityManager::ban(name);
     }
 }
 
-void ScriptEngine::tempBan(QString name, int time)
+void ScriptEngine::tempBan(QString name, int time, int src)
 {
-    // TODO: warning
-    if(time < 0) {
-        return;
-    }
-    SecurityManager::ban(name, time);
     if(loggedIn(myserver->id(name))) {
-        myserver->silentKick(myserver->id(name));
+        myserver->playerTempBan(src, myserver->id(name), time);
+    } else {
+        SecurityManager::ban(name, time);
     }
 }
 
